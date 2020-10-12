@@ -1,28 +1,42 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <app-header></app-header>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import VueRouter from "vue-router";
+import AppHeader from "./components/layout/AppNav.vue";
+import SprayMoney from "./components/SprayMoney/SprayMoney.vue";
+import SprayStatus from "./components/SprayStatus/SprayStatus.vue";
+import SprayItemPrize from "./components/SprayItemPrize/SprayItemPrize.vue";
+
+
+var router = new VueRouter({
+  routes: [
+    {
+      path: "/spray",
+      component: SprayMoney,
+    },
+    {
+      path: "/spraystatus",
+      component: SprayStatus,
+    },
+    {
+      path: "/prize-money",
+      component: SprayItemPrize,
+    },
+  ],
+});
 
 export default {
-  name: 'App',
   components: {
-    HelloWorld
-  }
-}
+    AppHeader,
+  },
+  router: router,
+};
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>
