@@ -1,34 +1,82 @@
 <template>
-  <div>
-    뿌리기 받기
-    <div v-show="isPrized">
-      <b-alert variant="success" v-bind:show="isPrizeSuccess">뿌리기 받기 성공! 당첨금: {{ response.prizeMoney }}</b-alert>
-      <b-alert variant="danger" v-bind:show="!isPrizeSuccess">뿌리기 받기 실패 {{}}</b-alert>
+  <div class="row">
+    <div class="col">
+      <div class="row">
+        <div class="col">
+          <h4>뿌리기 받기</h4>
+
+          <div v-show="isPrized">
+            <b-alert variant="success" v-bind:show="isPrizeSuccess">뿌리기 받기 성공! 당첨금: {{ response.prizeMoney }}</b-alert>
+            <b-alert variant="danger" v-bind:show="!isPrizeSuccess">뿌리기 받기 실패</b-alert>
+          </div>
+
+          <b-form v-on:submit.prevent="prizeMoney">
+            <div class="row">
+              <div class="col">
+                <b-form-group
+                  id="input-group-token"
+                  label="Token: "
+                  label-for="input-token"
+                >
+                  <b-form-input
+                    id="input-token"
+                    v-model="token"
+                    required
+                    placeholder="토큰을 입력하세요."
+                  ></b-form-input>
+                </b-form-group>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                <b-form-group
+                  id="input-group-user-id"
+                  label="User ID: "
+                  label-for="input-user-id"
+                >
+                  <b-form-input
+                    id="input-user-id"
+                    type="number"
+                    v-model="userId"
+                    required
+                    placeholder="사용자 아이디를 입력하세요."
+                  ></b-form-input>
+                </b-form-group>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                <b-form-group
+                  id="input-group-room-id"
+                  label="Room ID: "
+                  label-for="input-room-id"
+                >
+                  <b-form-input
+                    id="input-room-id"
+                    v-model="roomId"
+                    required
+                    placeholder="대화방 아이디를 입력하세요."
+                  ></b-form-input>
+                </b-form-group>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <b-button type="submit" variant="primary">받기</b-button>
+              </div>
+            </div>          
+
+          </b-form>
+
+        </div>
+      </div>
     </div>
-
-
-    <b-form v-on:submit.prevent="prizeMoney">
-      <label class="sr-only" for="form-input-token">토큰</label>
-      <b-input
-        id="form-input-token"
-        placeholder="토큰"
-        v-model="token"></b-input>
-
-      <label class="sr-only" for="form-input-user-id">User ID</label>
-      <b-input
-        id="form-input-user-id"
-        placeholder="유저 아이디"
-        v-model="userId"></b-input>
-
-      <label class="sr-only" for="form-input-room-id">Room ID</label>
-      <b-input
-        id="form-input-room-id"
-        placeholder="룸 아이디"
-        v-model="roomId"></b-input>
-
-      <b-button type="submit" variant="primary">뿌리기 받기</b-button>
-    </b-form>
   </div>
+    
+    
+
 </template>
 
 <script>
