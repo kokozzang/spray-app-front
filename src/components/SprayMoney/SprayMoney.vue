@@ -10,46 +10,12 @@
               >뿌리기 성공! 토큰: {{ response.token }}</b-alert
             >
             <b-alert variant="danger" v-bind:show="!isSpraySuccess"
-              >뿌리기 실패</b-alert
+              >뿌리기 실패! {{errorMessage}}</b-alert
             >
           </div>
 
           <b-form v-on:submit.prevent="sprayMoney">
-            <div class="row">
-              <div class="col">
-                <b-form-group
-                  id="input-group-user-id"
-                  label="User ID: "
-                  label-for="input-user-id"
-                >
-                  <b-form-input
-                    id="input-user-id"
-                    type="number"
-                    v-model="userId"
-                    required
-                    placeholder="사용자 아이디를 입력하세요."
-                  ></b-form-input>
-                </b-form-group>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col">
-                <b-form-group
-                  id="input-group-room-id"
-                  label="Room ID: "
-                  label-for="input-room-id"
-                >
-                  <b-form-input
-                    id="input-room-id"
-                    v-model="roomId"
-                    required
-                    placeholder="대화방 아이디를 입력하세요."
-                  ></b-form-input>
-                </b-form-group>
-              </div>
-            </div>
-
+            
             <div class="row">
               <div class="col">
                 <b-form-group
@@ -104,8 +70,6 @@ import axios from "axios";
 export default {
   data: function () {
     return {
-      userId: "",
-      roomId: "",
       budget: "",
       numberOfPeople: "",
       response: {
@@ -113,6 +77,7 @@ export default {
       },
       isSpraySuccess: false,
       isSprayed: false,
+      errorMessage: ''
     };
   },
   methods: {
@@ -123,8 +88,8 @@ export default {
         method: "post",
         url: "http://localhost:8080/spray",
         headers: {
-          "X-USER-ID": vm.userId,
-          "X-ROOM-ID": vm.roomId,
+          "X-USER-ID": vm.$store.getters.getUserId,
+          "X-ROOM-ID": vm.$store.getters.getRoomId
         },
         data: {
           budget: vm.budget,
@@ -140,9 +105,9 @@ export default {
           vm.isSpraySuccess = true;
         })
         .catch(function (error) {
-          console.error(error);
           vm.isSprayed = true;
           vm.isSpraySuccess = false;
+          vm.errorMessage = error.response.data.message;
         });
     },
   },

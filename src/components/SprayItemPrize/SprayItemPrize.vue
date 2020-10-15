@@ -1,16 +1,17 @@
 <template>
   <div class="row">
-    <div class="col">
+    <div class="col border">
       <div class="row">
         <div class="col">
           <h4>뿌리기 받기</h4>
 
           <div v-show="isPrized">
             <b-alert variant="success" v-bind:show="isPrizeSuccess">뿌리기 받기 성공! 당첨금: {{ response.prizeMoney }}</b-alert>
-            <b-alert variant="danger" v-bind:show="!isPrizeSuccess">뿌리기 받기 실패</b-alert>
+            <b-alert variant="danger" v-bind:show="!isPrizeSuccess">뿌리기 받기 실패! {{errorMessage}}</b-alert>
           </div>
 
           <b-form v-on:submit.prevent="prizeMoney">
+            
             <div class="row">
               <div class="col">
                 <b-form-group
@@ -28,40 +29,6 @@
               </div>
             </div>
 
-            <div class="row">
-              <div class="col">
-                <b-form-group
-                  id="input-group-user-id"
-                  label="User ID: "
-                  label-for="input-user-id"
-                >
-                  <b-form-input
-                    id="input-user-id"
-                    type="number"
-                    v-model="userId"
-                    required
-                    placeholder="사용자 아이디를 입력하세요."
-                  ></b-form-input>
-                </b-form-group>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col">
-                <b-form-group
-                  id="input-group-room-id"
-                  label="Room ID: "
-                  label-for="input-room-id"
-                >
-                  <b-form-input
-                    id="input-room-id"
-                    v-model="roomId"
-                    required
-                    placeholder="대화방 아이디를 입력하세요."
-                  ></b-form-input>
-                </b-form-group>
-              </div>
-            </div>
             <div class="row">
               <div class="col">
                 <b-button type="submit" variant="primary">받기</b-button>
@@ -86,13 +53,13 @@ export default {
   data: function () {
     return {
       token: '',
-      userId: '',
-      roomId: '',
       response: {
         prizeMoney: ''  // 당첨금
       },
       isPrizeSuccess: false,
-      isPrized: false
+      isPrized: false,
+      errorMessage: ''
+      
     }
   },
   methods: {
@@ -107,8 +74,8 @@ export default {
 
         },
         headers: {
-          'X-USER-ID': vm.userId,
-          'X-ROOM-ID': vm.roomId,
+          "X-USER-ID": vm.$store.getters.getUserId,
+          "X-ROOM-ID": vm.$store.getters.getRoomId
         },
       }
 
@@ -118,9 +85,9 @@ export default {
           vm.isPrized = true;
           vm.isPrizeSuccess = true;
         }).catch(function(error) {
-          console.error(error);
           vm.isPrized = true;
           vm.isPrizeSuccess = false;
+          vm.errorMessage = error.response.data.message;
         })
 
     },

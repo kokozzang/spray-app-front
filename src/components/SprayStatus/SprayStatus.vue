@@ -5,6 +5,9 @@
         <div class="col">
           <h4>뿌리기 상태 조회</h4>
 
+          <b-alert variant="danger" v-bind:show="isShowAlert"
+            >뿌리기 조회 실패! {{ errorMessage }}</b-alert
+          >
           <b-form v-on:submit.prevent="getSprayStatus">
             <div class="row">
               <div class="col">
@@ -25,43 +28,9 @@
 
             <div class="row">
               <div class="col">
-                <b-form-group
-                  id="input-group-user-id"
-                  label="User ID: "
-                  label-for="input-user-id"
-                >
-                  <b-form-input
-                    id="input-user-id"
-                    type="number"
-                    v-model="form.userId"
-                    required
-                    placeholder="사용자 아이디를 입력하세요."
-                  ></b-form-input>
-                </b-form-group>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col">
-                <b-form-group
-                  id="input-group-room-id"
-                  label="Room ID: "
-                  label-for="input-room-id"
-                >
-                  <b-form-input
-                    id="input-room-id"
-                    v-model="form.roomId"
-                    required
-                    placeholder="대화방 아이디를 입력하세요."
-                  ></b-form-input>
-                </b-form-group>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
                 <b-button type="submit" variant="primary">조회</b-button>
               </div>
-            </div>          
+            </div>
           </b-form>
         </div>
       </div>
@@ -90,9 +59,8 @@ export default {
     return {
       form: {
         token: "",
-        userId: "",
-        roomId: "",
       },
+      isShowAlert: false,
       isShowSprayStatusResult: false,
       sprayStatus: {
         createdAt: "",
@@ -100,6 +68,7 @@ export default {
         paidPrizeMoney: "",
         paymentDetails: [],
       },
+      errorMessage: "",
     };
   },
   methods: {
@@ -110,8 +79,8 @@ export default {
         method: "get",
         url: "http://localhost:8080/spray/" + vm.form.token,
         headers: {
-          "X-USER-ID": vm.form.userId,
-          "X-ROOM-ID": vm.form.roomId,
+          "X-USER-ID": vm.$store.getters.getUserId,
+          "X-ROOM-ID": vm.$store.getters.getRoomId,
         },
       };
 
@@ -120,8 +89,13 @@ export default {
         .then(function (response) {
           vm.sprayStatus = response.data.data;
           vm.isShowSprayStatusResult = true;
+          vm.isShowAlert = false;
         })
         .catch(function (error) {
+          vm.sprayStatus = {};
+          vm.isShowSprayStatusResult = false;
+          vm.isShowAlert = true;
+          vm.errorMessage = error.response.data.message;
           console.log(error);
         });
     },
